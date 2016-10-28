@@ -49,6 +49,7 @@ public class AudioInputHandler implements Runnable {
         audioBufferTemp = new short[audioBufferSize];
 
         audioAnalyzers = new CopyOnWriteArrayList<AudioAnalyzer>();
+        patchedAnalyzers = new CopyOnWriteArrayList<PatchedAnalyzer>();
 
         int maxSamplingFrequency = getMaxSamplingFrequency();
 
@@ -61,7 +62,7 @@ public class AudioInputHandler implements Runnable {
                         AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT,
                         audioBufferSize * 2);
-                audioInputStream.startRecording();
+	            Log.d("AudioInputHandler","audio stream initialized");
             }else{
                 throw new IllegalArgumentException("Buffer size must be at least " + (minBufferSize *2));
             }
@@ -71,6 +72,7 @@ public class AudioInputHandler implements Runnable {
     }
 
     public void run(){
+	    audioInputStream.startRecording();
         while(!isFinished){
             int samplesRead = audioInputStream.read(audioBufferTemp,0,audioBufferSize);
             if(samplesRead != audioBufferSize){
@@ -80,7 +82,7 @@ public class AudioInputHandler implements Runnable {
                 AudioData audioData = new AudioData(audioBuffer,samplingFrequency);
 
                 for(AudioAnalyzer analyzer : audioAnalyzers){
-                    Log.d("AudioInputHandler","calling analyzer");
+//                    Log.d("AudioInputHandler","calling analyzer");
                     analyzer.process(audioData);
                 }
             }

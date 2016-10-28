@@ -40,7 +40,6 @@ public class ChordDetector extends AudioAnalyzer {
     private double[] getChromagram(short[] audioBuffer){
         //Make sure the buffer length is even
         short[] tmpAudio;
-//	    Log.d("length even?", String.valueOf(((audioBuffer.length % 2) == 0)));
         if((audioBuffer.length % 2) == 0){
             tmpAudio = audioBuffer.clone();
         } else{
@@ -51,22 +50,10 @@ public class ChordDetector extends AudioAnalyzer {
             tmpAudio[audioBuffer.length] = 0;
         }
 
-//	    double acc = 0;
-//	    for (int i = 0; i < audioData.audioBuffer.length; i++) {
-//		    acc += Math.abs(((double)audioData.audioBuffer[i]/32768));
-//	    }
-//	    Log.d("audio buffer sum", Double.toString(acc));
-
         double[] buf = shortToDouble(audioBuffer);
 	    for (int i = 0; i < buf.length; i++) {
 		    buf[i] -= 0.5; //center the signal on 0 before windowing
 	    }
-
-//	    double acc2 = 0;
-//	    for (int i = 0; i < buf.length; i++) {
-//		    acc2 += Math.abs(buf[i]);
-//	    }
-//	    Log.d("audio buffer sum", Double.toString(acc2));
 
         //FFT
 	    double[] window = getHammingWindow(buf.length);
@@ -132,7 +119,7 @@ public class ChordDetector extends AudioAnalyzer {
             chromagram[i] *= chromagram[i];
         }
 
-	    Log.d("Chromagram", Arrays.toString(chromagram));
+//	    Log.d("Chromagram", Arrays.toString(chromagram));
 
         double[] deltas = new double[targetChords.size()];
         Arrays.fill(deltas,0);

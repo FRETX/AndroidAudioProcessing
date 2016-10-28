@@ -1,6 +1,7 @@
 package rocks.fretx.audioprocessing;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.Arrays;
 
@@ -11,16 +12,9 @@ import java.util.Arrays;
 
 public class PitchDetectorYin extends AudioAnalyzer {
 
-    protected final int samplingFrequency;
-    protected final int frameShift;
-    protected final int frameLength;
     private final double threshold;
 
-    protected AudioData audioData;
     private short[] tempBuffer;
-    protected int head;
-    protected int atFrame;
-    protected int maxFrames;
     private final float[] yinBuffer;
 
     protected PitchDetectionResult result;
@@ -49,7 +43,7 @@ public class PitchDetectorYin extends AudioAnalyzer {
         head = 0;
         while((tempBuffer = getNextFrame()) != null ){
             result = getPitch(tempBuffer);
-//            Log.d("YIN", Float.toString(result.getPitch()));
+            Log.d("YIN", Float.toString(result.getPitch()));
         }
         processingFinished();
     }
