@@ -1,6 +1,5 @@
 package rocks.fretx.audioprocessing;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -8,9 +7,9 @@ import java.util.Arrays;
 /**
  * Created by Onur Babacan on 9/23/16.
  */
+//Uses the YIN algorithm
 
-
-public class PitchDetectorYin extends AudioAnalyzer {
+public class PitchDetector extends AudioAnalyzer {
 
     private final double threshold;
 
@@ -53,17 +52,7 @@ public class PitchDetectorYin extends AudioAnalyzer {
 
     }
 
-    private static float median(float[] m) {
-        int middle = m.length/2;
-        if (m.length%2 == 1) {
-            return m[middle];
-        } else {
-            return (m[middle-1] + m[middle]) / 2;
-        }
-    }
-
-
-    public PitchDetectorYin(final int samplingFrequency, final int frameLength, final int frameShift, final double threshold) {
+    public PitchDetector(final int samplingFrequency, final int frameLength, final int frameShift, final double threshold) {
         this.samplingFrequency = samplingFrequency;
         this.frameLength = frameLength;
         this.frameShift = frameShift;
@@ -124,7 +113,7 @@ public class PitchDetectorYin extends AudioAnalyzer {
                 }
             }
             Arrays.sort(sortedPitchValues);
-            medianPitch = PitchDetectorYin.median(sortedPitchValues);
+            medianPitch = PitchDetector.median(sortedPitchValues);
         } else medianPitch = -1;
     }
 

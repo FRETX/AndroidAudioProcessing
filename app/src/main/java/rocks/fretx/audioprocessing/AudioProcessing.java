@@ -14,9 +14,10 @@ public class AudioProcessing {
 	private boolean processingIsRunning = false;
 	private boolean initialized = false;
 	protected ChordDetector chordDetector;
-	protected PitchDetectorYin pitchDetector;
+	protected PitchDetector pitchDetector;
 	protected NoteDetector noteDetector;
 	protected ArrayList<Chord> targetChords = new ArrayList<Chord>(0);
+
 
 
 	public float getPitch(){
@@ -35,30 +36,33 @@ public class AudioProcessing {
 		return noteDetector.noteName;
 	}
 
-	public void initialize(){
+	public void initialize(int targetFs, double bufferSizeInSeconds){
 		//TODO: take fs as input and give warning if requested fs is unavailable
 		//TODO: take other parameters as input optionally
+		//TODO: make parameters dynamic, or display their baking clearly in code
 //		int maxFs = AudioInputHandler.getMaxSamplingFrequency();
 //		int targetFs = maxFs;
-		int targetFs = 8000;
+//		int targetFs = 8000;
+//		double bufferSizeInSeconds = 0.25;
 
 		int minBufferSize = AudioInputHandler.getMinBufferSize(targetFs);
-		double bufferSizeInSeconds = 0.25;
+
 		int targetBufferSize = (int) Math.round(targetFs * bufferSizeInSeconds);
-		int audioBufferSize = (int) Math.pow(2, Math.ceil(Math.log((double) targetBufferSize) / Math.log(2))); //round up to nearest power of 2
+		//round up to nearest power of 2
+		int audioBufferSize = (int) Math.pow(2, Math.ceil(Math.log((double) targetBufferSize) / Math.log(2)));
 
 		//TODO: compare to minBufferSize and handle errors
 
+		//TODO: take frameLength as a parameter as well
 		int frameLength = audioBufferSize / 2;
 
 		handler = new AudioInputHandler(targetFs, audioBufferSize);
 
 //		Log.d("AudioProcessing" , "fs: " + Integer.toString(maxFs) + " frameLength: " + Integer.toString(frameLength));
 
-//		int minF0 = 60;
 		float frameOverlap = 0.5f;
 		float yinThreshold = 0.10f;
-		pitchDetector = new PitchDetectorYin(targetFs, frameLength, Math.round((float) frameLength * frameOverlap), yinThreshold);
+		pitchDetector = new PitchDetector(targetFs, frameLength, frameLength/2, yinThreshold);
 		//Patch pitch detector to the note detector
 		noteDetector = new NoteDetector(pitchDetector);
 
@@ -72,7 +76,6 @@ public class AudioProcessing {
 			targetChords.add(new Chord(minorRoots[i], "m"));
 		}
 
-		//TODO: make parameters dynamic, or display their baking clearly in code
 		//Create new chord detector
 		chordDetector = new ChordDetector(handler.samplingFrequency, frameLength, frameLength / 4, targetChords);
 		//Patch it to audio handler
@@ -82,6 +85,7 @@ public class AudioProcessing {
 		initialized = true;
 
 	}
+
 	public void start(){
 		//Start the audio thread
 		if(initialized){

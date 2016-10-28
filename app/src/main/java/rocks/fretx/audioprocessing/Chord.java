@@ -7,8 +7,6 @@ package rocks.fretx.audioprocessing;
 public class Chord {
     public final String root;
     public final String type;
-    public final String[] ALL_ROOT_NOTES = {"A","A#","B","C","C#","D","D#","E","F","G","G#"};
-    public final String[] ALL_CHORD_TYPES = {"maj","m","maj7","m7","5","7","9","sus2","sus4","7sus4","7#9","add9","aug","dim","dim7"};
 
     public Chord(String root, String type){
         //TODO: input handling
@@ -19,57 +17,6 @@ public class Chord {
 
     public String getChordString(){
         return root + type;
-    }
-    private int noteNameToSemitoneNumber(String name){
-        String newName = name;
-        if(name.length() == 2){
-            if(name.charAt(1) == 'b'){
-                switch (name.charAt(0)){
-                    case 'A': newName = "G#"; break;
-                    case 'B': newName = "A#"; break;
-                    case 'D': newName = "C#"; break;
-                    case 'E': newName = "D#"; break;
-                    case 'G': newName = "F#"; break;
-                    //This shouldn't happen
-                    default: break;
-                }
-            }
-        }
-        int semitone = 0;
-        switch(newName){
-            case "A":  semitone = 1; break;
-            case "A#": semitone = 2; break;
-            case "B":  semitone = 3; break;
-            case "C":  semitone = 4; break;
-            case "C#": semitone = 5; break;
-            case "D":  semitone = 6; break;
-            case "D#": semitone = 7; break;
-            case "E":  semitone = 8; break;
-            case "F":  semitone = 9; break;
-            case "F#": semitone = 10; break;
-            case "G":  semitone = 11; break;
-            case "G#": semitone = 12; break;
-            default: semitone = 0;
-        }
-        return semitone;
-    }
-    private String semitoneNumberToNoteName(int number){
-        switch(number){
-            case 1: return "A";
-            case 2: return "A#";
-            case 3: return "B";
-            case 4: return "C";
-            case 5: return "C#";
-            case 6: return "D";
-            case 7: return "D#";
-            case 8: return "E";
-            case 9: return "F";
-            case 10: return "F#";
-            case 11: return "G";
-            case 12: return "G#";
-            //This shouldn't happen
-            default: return "NONE";
-        }
     }
 
     private int[] getChordFormula(){
@@ -154,7 +101,7 @@ public class Chord {
     }
 
     public int[] getNotes(){
-        int rootNumber = noteNameToSemitoneNumber(root);
+        int rootNumber = MusicUtils.noteNameToSemitoneNumber(root);
         int[] formula = getChordFormula();
         int[] notes = new int[formula.length];
         for (int i = 0; i < notes.length ; i++) {
@@ -168,7 +115,7 @@ public class Chord {
         int[] notes = getNotes();
         String[] noteNames = new String[notes.length];
         for (int i = 0; i < noteNames.length; i++) {
-            noteNames[i] = semitoneNumberToNoteName(notes[i]);
+            noteNames[i] = MusicUtils.semitoneNumberToNoteName(notes[i]);
         }
         return noteNames;
     }

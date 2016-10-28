@@ -23,7 +23,7 @@ public class AudioData {
 	    double normalized;
         for (int i = 0; i < audioBuffer.length; i++) {
 	        normalized = ((((double) audioBuffer[i] / 32768)) )*10;//values are really low without the *10! yup. dirty hack.
-//	        Log.d("yarro", Double.toString(normalized));
+	        //TODO: make device-specific volume normalization
 	        acc +=  normalized * normalized;
         }
 	    return acc / (double) audioBuffer.length;

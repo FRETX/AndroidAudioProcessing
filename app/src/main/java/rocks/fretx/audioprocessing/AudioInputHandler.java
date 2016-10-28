@@ -44,10 +44,8 @@ public class AudioInputHandler implements Runnable {
     public AudioInputHandler(int fs, int bufSize){
         samplingFrequency = fs;
         audioBufferSize = bufSize;
-
         audioBuffer = new short[audioBufferSize];
         audioBufferTemp = new short[audioBufferSize];
-
         audioAnalyzers = new CopyOnWriteArrayList<AudioAnalyzer>();
         patchedAnalyzers = new CopyOnWriteArrayList<PatchedAnalyzer>();
 
@@ -80,9 +78,7 @@ public class AudioInputHandler implements Runnable {
             } else {
                 audioBuffer = audioBufferTemp.clone();
                 AudioData audioData = new AudioData(audioBuffer,samplingFrequency);
-
                 for(AudioAnalyzer analyzer : audioAnalyzers){
-//                    Log.d("AudioInputHandler","calling analyzer");
                     analyzer.process(audioData);
                 }
             }
@@ -103,6 +99,7 @@ public class AudioInputHandler implements Runnable {
     public void addAudioAnalyzer (final AudioAnalyzer audioAnalyzer){
         audioAnalyzers.add(audioAnalyzer);
     }
+
     public void removeAudioAnalyzer (final AudioAnalyzer audioAnalyzer){
         audioAnalyzers.remove(audioAnalyzer);
     }
