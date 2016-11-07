@@ -31,20 +31,20 @@ public class PitchDetector extends AudioAnalyzer {
     public static final int DEFAULT_FRAME_SHIFT = 882;
 
     @Override
-    public void process(AudioData inputAudioData) {
-        audioData = inputAudioData;
-        if(audioData.length() < frameLength){
-            maxFrames = (int) Math.ceil( (double)(audioData.length() - frameLength) / (double) frameShift);
-        } else {
-            maxFrames = 1;
-        }
-        atFrame = 1;
-        head = 0;
-        while((tempBuffer = getNextFrame()) != null ){
-            result = getPitch(tempBuffer);
-            Log.d("YIN", Float.toString(result.getPitch()));
-        }
-        processingFinished();
+    public void internalProcess(AudioData inputAudioData) {
+            audioData = inputAudioData;
+            if (audioData.length() < frameLength) {
+                maxFrames = (int) Math.ceil((double) (audioData.length() - frameLength) / (double) frameShift);
+            } else {
+                maxFrames = 1;
+            }
+            atFrame = 1;
+            head = 0;
+            while ((tempBuffer = getNextFrame()) != null) {
+                result = getPitch(tempBuffer);
+	            output = result.getPitch();
+                Log.d("YIN", Float.toString(result.getPitch()));
+            }
     }
 
     @Override
@@ -53,6 +53,7 @@ public class PitchDetector extends AudioAnalyzer {
     }
 
     public PitchDetector(final int samplingFrequency, final int frameLength, final int frameShift, final double threshold) {
+	    super();
         this.samplingFrequency = samplingFrequency;
         this.frameLength = frameLength;
         this.frameShift = frameShift;

@@ -36,6 +36,8 @@ public class AudioProcessing {
 		return noteDetector.noteName;
 	}
 
+	public double getVolume(){ return chordDetector.volume;	}
+
 	public void initialize(int targetFs, double bufferSizeInSeconds){
 		//TODO: take fs as input and give warning if requested fs is unavailable
 		//TODO: take other parameters as input optionally
@@ -64,7 +66,7 @@ public class AudioProcessing {
 		float yinThreshold = 0.10f;
 		pitchDetector = new PitchDetector(targetFs, frameLength, frameLength/2, yinThreshold);
 		//Patch pitch detector to the note detector
-		noteDetector = new NoteDetector(pitchDetector);
+		noteDetector = new NoteDetector();
 
 		//TODO: make target chords dynamic
 		String[] majorRoots = new String[]{"A", "C", "D", "E", "F", "G"};
@@ -81,7 +83,7 @@ public class AudioProcessing {
 		//Patch it to audio handler
 		handler.addAudioAnalyzer(pitchDetector);
 		handler.addAudioAnalyzer(chordDetector);
-		handler.addPatchedAnalyzer(noteDetector);
+		pitchDetector.addParameterAnalyzer(noteDetector);
 		initialized = true;
 
 	}

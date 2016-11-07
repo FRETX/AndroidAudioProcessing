@@ -28,7 +28,7 @@ public class AudioInputHandler implements Runnable {
     protected final int audioBufferSize;
 
     private List<AudioAnalyzer> audioAnalyzers;
-    private List<PatchedAnalyzer> patchedAnalyzers;
+    private List<ParameterAnalyzer> parameterAnalyzers;
 
     private static final int DEFAULT_SAMPLING_FREQUENCY = 44100;
     private static final int DEFAULT_AUDIO_BUFFER_SIZE = 7200;
@@ -47,7 +47,7 @@ public class AudioInputHandler implements Runnable {
         audioBuffer = new short[audioBufferSize];
         audioBufferTemp = new short[audioBufferSize];
         audioAnalyzers = new CopyOnWriteArrayList<AudioAnalyzer>();
-        patchedAnalyzers = new CopyOnWriteArrayList<PatchedAnalyzer>();
+
 
         int maxSamplingFrequency = getMaxSamplingFrequency();
 
@@ -104,13 +104,7 @@ public class AudioInputHandler implements Runnable {
         audioAnalyzers.remove(audioAnalyzer);
     }
 
-	public void addPatchedAnalyzer(final PatchedAnalyzer patchedAnalyzer) {
-		patchedAnalyzers.add(patchedAnalyzer);
-	}
 
-	public void removePatchedAnalyzer(final PatchedAnalyzer patchedAnalyzer) {
-		patchedAnalyzers.remove(patchedAnalyzer);
-	}
 
     public static int getMaxSamplingFrequency() {
         int maxSamplingFrequency = 0;

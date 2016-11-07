@@ -24,6 +24,7 @@ public class ChordDetector extends AudioAnalyzer {
     protected boolean readLock = true;
 
     public ChordDetector(final int samplingFrequency, final int frameLength, final int frameShift, final List<Chord> targetChords) {
+	    super();
 //        int frameLength = Math.round ((float)audioData.samplingFrequency * CHROMAGRAM_FRAME_LENGTH_IN_S);
 //        int frameShift = frameLength / 4;
 //        final float CHROMAGRAM_FRAME_LENGTH_IN_S = 0.75f;
@@ -107,24 +108,24 @@ public class ChordDetector extends AudioAnalyzer {
     }
 
     @Override
-    public void process(AudioData inputAudioData) {
-        audioData = inputAudioData;
-		volume = audioData.getSignalPower();
+    public void internalProcess(AudioData inputAudioData) {
+            audioData = inputAudioData;
+            volume = audioData.getSignalPower();
 //		Log.d("volume",Double.toString(volume));
-	    //TODO: Fix this in PitchDetector too!
-        if(audioData.length() > frameLength){
-            maxFrames = (int) Math.ceil( (double)(audioData.length() - frameLength) / (double) frameShift);
-        } else {
-            maxFrames = 1;
-        }
-        atFrame = 1;
-        head = 0;
-        double[] chromagram;
-        while((tempBuffer = getNextFrame()) != null ){
-	        chromagram = getChromagram(tempBuffer);
-            detectedChord = detectChord(targetChords, chromagram);
-        }
-        processingFinished();
+            //TODO: Fix this in PitchDetector too!
+            if (audioData.length() > frameLength) {
+                maxFrames = (int) Math.ceil((double) (audioData.length() - frameLength) / (double) frameShift);
+            } else {
+                maxFrames = 1;
+            }
+            atFrame = 1;
+            head = 0;
+            double[] chromagram;
+            while ((tempBuffer = getNextFrame()) != null) {
+                chromagram = getChromagram(tempBuffer);
+                detectedChord = detectChord(targetChords, chromagram);
+	            output = (double) targetChords.indexOf(detectedChord);
+            }
     }
 
     @Override

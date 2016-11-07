@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import org.jtransforms.fft.DoubleFFT_1D;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Onur Babacan on 9/23/16.
@@ -19,9 +21,39 @@ abstract public class AudioAnalyzer {
     protected int atFrame;
     protected int maxFrames;
     protected AudioData audioData;
+	protected double output;
+    protected boolean enabled = true;
+	private List<ParameterAnalyzer> parameterAnalyzers;
 
-    public abstract void process(AudioData audioData);
-    public abstract void processingFinished();
+	public AudioAnalyzer(){
+		parameterAnalyzers = new CopyOnWriteArrayList<ParameterAnalyzer>();
+	}
+
+    protected abstract void internalProcess(AudioData audioData);
+    protected abstract void processingFinished();
+
+
+	public void addParameterAnalyzer(final ParameterAnalyzer parameterAnalyzer) {
+		parameterAnalyzers.add(parameterAnalyzer);
+	}
+
+	public void removeParameterAnalyzer(final ParameterAnalyzer parameterAnalyzer) {
+		parameterAnalyzers.remove(parameterAnalyzer);
+	}
+
+	public void process(AudioData audioData){
+		if(enabled){
+			internalProcess(audioData);
+			processingFinished();
+			sendOutput(output);
+		}
+	}
+
+	private void sendOutput(double output){
+		for (ParameterAnalyzer analyzer : parameterAnalyzers) {
+			analyzer.process(output);
+		}
+	}
 
     @Nullable
     protected short[] getNextFrame() {
@@ -45,6 +77,14 @@ abstract public class AudioAnalyzer {
             return null;
         }
     }
+
+	public void enable(){
+		enabled = true;
+	}
+
+	public void disable(){
+		enabled = false;
+	}
 
     //General purpose and utility methods
     public static float[] shortToFloat(short[] audio) {
