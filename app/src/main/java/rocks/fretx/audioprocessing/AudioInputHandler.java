@@ -30,6 +30,8 @@ public class AudioInputHandler implements Runnable {
     private List<AudioAnalyzer> audioAnalyzers;
     private List<ParameterAnalyzer> parameterAnalyzers;
 
+	private double volume;
+
     private static final int DEFAULT_SAMPLING_FREQUENCY = 44100;
     private static final int DEFAULT_AUDIO_BUFFER_SIZE = 7200;
 
@@ -78,12 +80,21 @@ public class AudioInputHandler implements Runnable {
             } else {
                 audioBuffer = audioBufferTemp.clone();
                 AudioData audioData = new AudioData(audioBuffer,samplingFrequency);
+//                Log.d("pre-norm power", Double.toString(audioData.getSignalPower()));
+                audioData.normalize();
+//                Log.d("post-norm power", Double.toString(audioData.getSignalPower()));
+	            volume = 10 * Math.log10(audioData.getSignalPower());
+//	            Log.d("post-norm volume", Double.toString(volume));
                 for(AudioAnalyzer analyzer : audioAnalyzers){
                     analyzer.process(audioData);
                 }
             }
         }
     }
+
+	public double getVolume(){
+		return volume;
+	}
 
     public void onDestroy(){
         isFinished = true;

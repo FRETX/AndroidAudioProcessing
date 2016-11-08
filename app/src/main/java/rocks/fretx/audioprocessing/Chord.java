@@ -4,6 +4,8 @@ package rocks.fretx.audioprocessing;
  * Created by Onur Babacan on 10/20/16.
  */
 
+//TODO: proper object comparison, i.e. (chord1 == chord2) should work
+
 public class Chord {
     public final String root;
     public final String type;
@@ -118,5 +120,9 @@ public class Chord {
             noteNames[i] = MusicUtils.semitoneNumberToNoteName(notes[i]);
         }
         return noteNames;
+    }
+
+    public String toString(){
+        return root + type;
     }
 }

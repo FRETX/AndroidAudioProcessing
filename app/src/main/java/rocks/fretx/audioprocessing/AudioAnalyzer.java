@@ -56,8 +56,8 @@ abstract public class AudioAnalyzer {
 	}
 
     @Nullable
-    protected short[] getNextFrame() {
-        short[] outputBuffer;
+    protected double[] getNextFrame() {
+        double[] outputBuffer;
         if (atFrame <= maxFrames) {
             atFrame++;
             if (head + frameLength > audioData.length()) {
@@ -115,34 +115,33 @@ abstract public class AudioAnalyzer {
         return window;
     }
 
-    public static double[] getMagnitudeSpectrum(double[] buf){
-        //FFT
-        double[] window = getHammingWindow(buf.length);
-        for (int i = 0; i < buf.length; i++) {
-            buf[i] *= window[i];
-        }
-        DoubleFFT_1D fft = new DoubleFFT_1D(buf.length);
-        fft.realForward(buf);
+	public static double[] getMagnitudeSpectrum(double[] buf) {
+		//FFT
+		double[] window = getHammingWindow(buf.length);
+		for (int i = 0; i < buf.length; i++) {
+			buf[i] *= window[i];
+		}
+		DoubleFFT_1D fft = new DoubleFFT_1D(buf.length);
+		fft.realForward(buf);
 
-        //Calculate Magnitude spectrum from FFT result
-        double[] magnitudeSpectrum = new double[buf.length / 2];
-        magnitudeSpectrum[0] = Math.abs(buf[0]);
-        magnitudeSpectrum[magnitudeSpectrum.length - 1] = Math.abs(buf[1]);
-        for (int i = 1; i < magnitudeSpectrum.length - 1; i++) {
-            magnitudeSpectrum[i] = ((buf[2 * i] * buf[2 * i]) + (buf[2 * i + 1] * buf[2 * i + 1]));
-        }
-        //Take the sqrt of values necessary for calculating the spectrum, at the same time,
-        //normalize by the largest peak
-        double maxVal = 0;
-        for (int i = 0; i < magnitudeSpectrum.length; i++) {
-            if (magnitudeSpectrum[i] > maxVal) maxVal = magnitudeSpectrum[i];
-        }
-        double normalizationFactor = maxVal;
-        for (int i = 0; i < magnitudeSpectrum.length; i++) {
-            magnitudeSpectrum[i] = Math.sqrt(magnitudeSpectrum[i]) / normalizationFactor;
-        }
-        return magnitudeSpectrum;
-    }
+		//Calculate Magnitude spectrum from FFT result
+		double[] magnitudeSpectrum = new double[buf.length / 2];
+		magnitudeSpectrum[0] = Math.sqrt(Math.abs(buf[0]));
+		magnitudeSpectrum[magnitudeSpectrum.length - 1] = Math.sqrt(Math.abs(buf[1]));
+		for (int i = 1; i < magnitudeSpectrum.length - 1; i++) {
+			magnitudeSpectrum[i] = Math.sqrt((buf[2 * i] * buf[2 * i]) + (buf[2 * i + 1] * buf[2 * i + 1]));
+		}
+		//Normalize by the largest peak
+		double maxVal = 0;
+		for (int i = 0; i < magnitudeSpectrum.length; i++) {
+			if (magnitudeSpectrum[i] > maxVal) maxVal = magnitudeSpectrum[i];
+		}
+		double normalizationFactor = maxVal;
+		for (int i = 0; i < magnitudeSpectrum.length; i++) {
+			magnitudeSpectrum[i] /= normalizationFactor;
+		}
+		return magnitudeSpectrum;
+	}
 
     public static float median(float[] m) {
         int middle = m.length / 2;

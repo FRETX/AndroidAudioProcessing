@@ -13,7 +13,7 @@ public class PitchDetector extends AudioAnalyzer {
 
     private final double threshold;
 
-    private short[] tempBuffer;
+    private double[] tempBuffer;
     private final float[] yinBuffer;
 
     protected PitchDetectionResult result;
@@ -43,7 +43,7 @@ public class PitchDetector extends AudioAnalyzer {
             while ((tempBuffer = getNextFrame()) != null) {
                 result = getPitch(tempBuffer);
 	            output = result.getPitch();
-                Log.d("YIN", Float.toString(result.getPitch()));
+//                Log.d("YIN", Float.toString(result.getPitch()));
             }
     }
 
@@ -62,16 +62,19 @@ public class PitchDetector extends AudioAnalyzer {
         this.atFrame = -1;
         this.maxFrames = -1;
         this.yinBuffer = new float[frameLength / 2];
-        this.tempBuffer = new short[frameLength];
+        this.tempBuffer = new double[frameLength];
         this.result = new PitchDetectionResult();
         Arrays.fill(lastValues,-1);
     }
 
-    public PitchDetectionResult getPitch(final short[] audioBufferShort) {
+    public PitchDetectionResult getPitch(final double[] audioBufferDouble) {
 
         int tauEstimate;
         float pitchInHertz;
-        float[] audioBuffer = shortToFloat(audioBufferShort);
+        float[] audioBuffer = new float[audioBufferDouble.length];
+	    for (int i = 0; i < audioBufferDouble.length; i++) {
+		    audioBuffer[i] = (float) audioBufferDouble[i];
+	    }
 
         difference(audioBuffer);
         cumulativeMeanNormalizedDifference();

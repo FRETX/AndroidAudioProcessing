@@ -17,6 +17,7 @@ public class AudioProcessing {
 	protected PitchDetector pitchDetector;
 	protected NoteDetector noteDetector;
 	protected ArrayList<Chord> targetChords = new ArrayList<Chord>(0);
+	protected int frameLength;
 
 
 
@@ -36,7 +37,7 @@ public class AudioProcessing {
 		return noteDetector.noteName;
 	}
 
-	public double getVolume(){ return chordDetector.volume;	}
+	public double getVolume(){ return handler.getVolume();}
 
 	public void initialize(int targetFs, double bufferSizeInSeconds){
 		//TODO: take fs as input and give warning if requested fs is unavailable
@@ -56,7 +57,8 @@ public class AudioProcessing {
 		//TODO: compare to minBufferSize and handle errors
 
 		//TODO: take frameLength as a parameter as well
-		int frameLength = audioBufferSize / 2;
+
+		frameLength = audioBufferSize / 2;
 
 		handler = new AudioInputHandler(targetFs, audioBufferSize);
 
@@ -86,6 +88,15 @@ public class AudioProcessing {
 		pitchDetector.addParameterAnalyzer(noteDetector);
 		initialized = true;
 
+	}
+
+	public void setTargetChords(ArrayList<Chord> chords){
+		targetChords = chords;
+		chordDetector = new ChordDetector(handler.samplingFrequency, frameLength, frameLength / 4, targetChords);
+	}
+
+	public ArrayList<Chord> getTargetChords(){
+		return targetChords;
 	}
 
 	public void start(){
