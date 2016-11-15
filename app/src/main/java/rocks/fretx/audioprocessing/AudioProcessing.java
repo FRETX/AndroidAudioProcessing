@@ -92,7 +92,7 @@ public class AudioProcessing {
 
 	public void setTargetChords(ArrayList<Chord> chords){
 		targetChords = chords;
-		chordDetector = new ChordDetector(handler.samplingFrequency, frameLength, frameLength / 4, targetChords);
+		chordDetector.setTargetChords(chords);
 	}
 
 	public ArrayList<Chord> getTargetChords(){
@@ -154,4 +154,31 @@ public class AudioProcessing {
 			return false;
 		}
 	}
+
+
+
+	public void enablePitchDetector() {
+		pitchDetector.enable();
+	}
+
+	public void disablePitchDetector() {
+		pitchDetector.disable();
+	}
+
+	public void enableNoteDetector() {
+		noteDetector.enable();
+	}
+
+	public void disableNoteDetector(){
+		noteDetector.disable();
+	}
+
+	public void disableChordDetector(){
+		chordDetector.disable();
+	}
+
+	public void enableChordDetector() {
+		chordDetector.enable();
+	}
+
 }

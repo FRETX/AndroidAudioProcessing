@@ -1,5 +1,6 @@
 package rocks.fretx.audioprocessing;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +15,6 @@ public class ChordDetector extends AudioAnalyzer {
     protected Chord detectedChord;
 
     protected double[] magnitudeSpectrum;
-    protected boolean readLock = true;
 
     public ChordDetector(final int samplingFrequency, final int frameLength, final int frameShift, final List<Chord> targetChords) {
 	    super();
@@ -26,6 +26,10 @@ public class ChordDetector extends AudioAnalyzer {
         this.maxFrames = -1;
         this.targetChords = targetChords;
     }
+
+	protected void setTargetChords(ArrayList<Chord> chords){
+		targetChords = chords;
+	}
 
 	private double[] getChromagram(double[] audioBuffer) {
 		//Make sure the buffer length is even
