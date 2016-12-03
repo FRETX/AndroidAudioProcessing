@@ -24,6 +24,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.github.wendykierp:JTransforms:3.1'
     testCompile 'junit:junit:4.12'
 }

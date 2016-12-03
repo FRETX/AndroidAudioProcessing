@@ -41,5 +41,8 @@ public class FretboardPosition {
         return string;
     }
 
+    public byte getByteCode() {
+        return Byte.valueOf(Integer.toString(this.fret + this.string*10));
+    }
 
 }

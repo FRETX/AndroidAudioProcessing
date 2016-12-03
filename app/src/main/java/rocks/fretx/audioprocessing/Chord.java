@@ -1,5 +1,22 @@
 package rocks.fretx.audioprocessing;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.StringReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Onur Babacan on 10/20/16.
  */
@@ -10,7 +27,7 @@ public class Chord {
     public final String root;
     public final String type;
 
-    public Chord(String root, String type){
+    public Chord(String root, String type) {
         //TODO: input handling
 
         this.root = root;
@@ -125,4 +142,25 @@ public class Chord {
     public String toString(){
         return root + type;
     }
+
+//    public ArrayList<FretboardPosition> getFretboardPositions(){
+//
+//    }
+
+	// chord data - currently explicit representation for 6 string guitar, standard tuning only, and
+// each chord is an array of alternate positions
+// 0" : 1st (open) position
+// 1" : 1st barre position, generally at 12/13/14th fret
+// - minimum, only required for CAGED chords where open strings are used in the 1st (open) position
+// since the main purpose of this is to provide barre fingering positions for CAGED-based chords
+// 2.." : alternative positions/fingerings
+// each position is an array comprising: 1. base fret (0==nut); 2. 6x note definitions (strings 6,5,4,3,2,1)
+// each note is an array: (fret position), (left hand fingering if applicable 1,2,3,4,T)
+// fret position: -1 = muted/not played; 0 = open; 1,2,3... = fret position
+
+
+
+
+
+
 }
