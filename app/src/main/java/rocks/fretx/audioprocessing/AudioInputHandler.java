@@ -8,6 +8,7 @@ package rocks.fretx.audioprocessing;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Process;
 import android.util.Log;
 
 import java.util.List;
@@ -72,7 +73,17 @@ public class AudioInputHandler implements Runnable {
     }
 
     public void run(){
-	    audioInputStream.startRecording();
+        int tid=android.os.Process.myTid();
+
+        Log.d(TAG,"priority before change = " + android.os.Process.getThreadPriority(tid));
+        Log.d(TAG,"priority before change = "+Thread.currentThread().getPriority());
+
+        android.os.Process.setThreadPriority(tid, Process.THREAD_PRIORITY_AUDIO);
+
+        Log.d(TAG,"priority after change = " + android.os.Process.getThreadPriority(tid));
+        Log.d(TAG,"priority after change = " + Thread.currentThread().getPriority());
+
+        audioInputStream.startRecording();
         while(!isFinished){
             int samplesRead = audioInputStream.read(audioBufferTemp,0,audioBufferSize);
             if(samplesRead != audioBufferSize){
