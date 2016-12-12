@@ -1,6 +1,9 @@
 package rocks.fretx.audioprocessing;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by Onur Babacan on 10/20/16.
  */
@@ -8,20 +11,25 @@ package rocks.fretx.audioprocessing;
 //TODO: proper object comparison, i.e. (chord1 == chord2) should work
 
 public class Chord {
-    public final String root;
-    public final String type;
+    private final String root;
+    private final String type;
+    private int baseFret;
+    private ArrayList<FretboardPosition> fingerPositions;
 
     public Chord(String root, String type) {
         //TODO: input handling
-
         this.root = root;
         this.type = type;
+        calculateFingerPositions();
     }
 
-    public String getChordString(){
-        return root + type;
-    }
+	public String getRoot(){
+		return root;
+	}
 
+	public String getType(){
+		return type;
+	}
     private int[] getChordFormula(){
         //int[] majorIntervals = {2,2,1,2,2,2,1,2,2,1,2,2,2,1};
         //in MATLAB: semitoneLookup = cumsum([1 majorIntervals]);
@@ -127,9 +135,29 @@ public class Chord {
         return root + type;
     }
 
-//    public ArrayList<FretboardPosition> getFretboardPositions(){
-//
-//    }
+    public int getBaseFret(){
+        return baseFret;
+    }
+
+    public ArrayList<FretboardPosition> getFingerPositions(){
+        return fingerPositions;
+    }
+
+    private void calculateFingerPositions(){
+        HashMap<String,FingerPositions> chordFingerings = MusicUtils.parseChordDb();
+        fingerPositions = new ArrayList<FretboardPosition>();
+        FingerPositions fp = chordFingerings.get(root+type);
+        baseFret = fp.baseFret;
+        int tmpFret, tmpString;
+
+        fingerPositions.add(new FretboardPosition(1,fp.string1));
+        fingerPositions.add(new FretboardPosition(2,fp.string2));
+        fingerPositions.add(new FretboardPosition(3,fp.string3));
+        fingerPositions.add(new FretboardPosition(4,fp.string4));
+        fingerPositions.add(new FretboardPosition(5,fp.string5));
+        fingerPositions.add(new FretboardPosition(6,fp.string6));
+    }
+
 
 	// chord data - currently explicit representation for 6 string guitar, standard tuning only, and
 // each chord is an array of alternate positions

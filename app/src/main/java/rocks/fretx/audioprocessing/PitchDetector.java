@@ -17,7 +17,7 @@ public class PitchDetector extends AudioAnalyzer {
     private final float[] yinBuffer;
 
     protected PitchDetectionResult result;
-    private final int nLastValues = 5;
+    private final int nLastValues = 9;
     protected float[] lastValues = new float[nLastValues];
     protected float medianPitch = -1;
 

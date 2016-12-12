@@ -73,15 +73,9 @@ public class AudioInputHandler implements Runnable {
     }
 
     public void run(){
+	    //Set thread priority to Audio
         int tid=android.os.Process.myTid();
-
-        Log.d(TAG,"priority before change = " + android.os.Process.getThreadPriority(tid));
-        Log.d(TAG,"priority before change = "+Thread.currentThread().getPriority());
-
         android.os.Process.setThreadPriority(tid, Process.THREAD_PRIORITY_AUDIO);
-
-        Log.d(TAG,"priority after change = " + android.os.Process.getThreadPriority(tid));
-        Log.d(TAG,"priority after change = " + Thread.currentThread().getPriority());
 
         audioInputStream.startRecording();
         while(!isFinished){
