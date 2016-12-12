@@ -11,6 +11,10 @@ import java.util.HashMap;
 //TODO: proper object comparison, i.e. (chord1 == chord2) should work
 
 public class Chord {
+	public static final String[] ALL_ROOT_NOTES = {"A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"};
+	public static final String[] ALL_CHORD_TYPES = {"maj", "m", "maj7", "m7", "5", "7", "9", "sus2", "sus4", "7sus4", "7#9", "add9", "aug", "dim", "dim7"};
+	//obviously not all possible chord types, just all the ones we have in the app
+
     private final String root;
     private final String type;
     private int baseFret;
