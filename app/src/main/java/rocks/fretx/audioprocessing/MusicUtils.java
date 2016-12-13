@@ -22,9 +22,9 @@ public class MusicUtils {
 	//These two methods are used in chord recognition and there IS a reason why C!=1 and A==1 instead.
 	//Don't touch these two, yo, things will break.
 	public static int noteNameToSemitoneNumber(String name) {
-		String newName = validateNoteName(name);
+//		String name = validateNoteName(name);
 		int semitone = 0;
-		switch (newName) {
+		switch (name) {
 			case "A":
 				semitone = 1;
 				break;
@@ -101,6 +101,7 @@ public class MusicUtils {
 	//Naa na na naa, naaa naa
 
 	public static String validateNoteName(String name){
+		Log.d("validating note name",name);
 		String newName = name;
 		if (name.length() == 2) {
 			if (name.charAt(1) == 'b') {
@@ -135,7 +136,11 @@ public class MusicUtils {
 				}
 			}
 		}
-
+		if(newName == null){
+			Log.d("validation returns", "null");
+		} else{
+			Log.d("validated,returning",newName);
+		}
 		return newName;
 	}
 
@@ -155,10 +160,10 @@ public class MusicUtils {
 	}
 
 	public static int[] noteNameToMidiNotes(String name){
-		String newName = validateNoteName(name);
+//		String name = validateNoteName(name);
 		int lowestMidiNote = 0;
 		int upperMidiBound = 108;
-		switch (newName) {
+		switch (name) {
 			case "A":
 				lowestMidiNote = 21;
 				break;
