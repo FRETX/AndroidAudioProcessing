@@ -292,38 +292,42 @@ public class MusicUtils {
 	}
 
 	public static byte[] getBluetoothArrayFromChord(String chordName, HashMap<String,FingerPositions> chordFingerings){
-		FingerPositions fp = chordFingerings.get(chordName);
-		int[] fingerArray = new int[6];
-		fingerArray[0] = fp.string1;
-		fingerArray[1] = fp.string2;
-		fingerArray[2] = fp.string3;
-		fingerArray[3] = fp.string4;
-		fingerArray[4] = fp.string5;
-		fingerArray[5] = fp.string6;
+		byte[] bytecodes = new byte[1];
+		if(chordName.equals("noise")){
+			bytecodes[0] = Byte.valueOf("0");
+		} else {
+			FingerPositions fp = chordFingerings.get(chordName);
+			int[] fingerArray = new int[6];
+			fingerArray[0] = fp.string1;
+			fingerArray[1] = fp.string2;
+			fingerArray[2] = fp.string3;
+			fingerArray[3] = fp.string4;
+			fingerArray[4] = fp.string5;
+			fingerArray[5] = fp.string6;
 
-		int lightCount = 6;
-		for (int i = 0; i < fingerArray.length; i++) {
-			if(fingerArray[i] + fp.baseFret > 4){
-				Log.e("MusicUtils","The chord " + fp.name + " is outside FretX's display range");
-				byte[] b = new byte[1];
-				b[0] = Byte.valueOf("0");
-				return b;
+			int lightCount = 6;
+			for (int i = 0; i < fingerArray.length; i++) {
+				if(fingerArray[i] + fp.baseFret > 4){
+					Log.e("MusicUtils","The chord " + fp.name + " is outside FretX's display range");
+					byte[] b = new byte[1];
+					b[0] = Byte.valueOf("0");
+					return b;
+				}
+				if(fingerArray[i] == -1){
+					lightCount--;
+				}
 			}
-			if(fingerArray[i] == -1){
-				lightCount--;
+			bytecodes = new byte[lightCount+1];
+			int byteIndex = 0;
+			for (int i = 0; i < fingerArray.length; i++) {
+				if(fingerArray[i] > -1){
+					bytecodes[byteIndex] =  Byte.valueOf(Integer.toString((i+1) + 10*fingerArray[i]));
+					byteIndex++;
+				}
 			}
+			bytecodes[byteIndex] = Byte.valueOf("0");
 		}
 
-		byte[] bytecodes = new byte[lightCount+1];
-
-		int byteIndex = 0;
-		for (int i = 0; i < fingerArray.length; i++) {
-			if(fingerArray[i] > -1){
-				bytecodes[byteIndex] =  Byte.valueOf(Integer.toString((i+1) + 10*fingerArray[i]));
-				byteIndex++;
-			}
-		}
-		bytecodes[byteIndex] = Byte.valueOf("0");
 		return bytecodes;
 	}
 

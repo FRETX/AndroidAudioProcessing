@@ -12,7 +12,8 @@ import java.util.Arrays;
 
 public class Scale {
 	public static final String[] ALL_ROOT_NOTES = {"A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"};
-	public static final String[] ALL_SCALE_TYPES = {"Major","Minor","Major Pentatonic","Minor Pentatonic","Blues","Harmonic Minor","Melodic Minor","Ionian","Dorian","Phrygian","Lydian","Mixolydian","Aeolian","Locrian","Whole Tone"};
+//	public static final String[] ALL_SCALE_TYPES = {"Major","Minor","Major Pentatonic","Minor Pentatonic","Blues","Harmonic Minor","Melodic Minor","Ionian","Dorian","Phrygian","Lydian","Mixolydian","Aeolian","Locrian","Whole Tone"};
+	public static final String[] ALL_SCALE_TYPES = {"Major","Minor","Major Pentatonic","Minor Pentatonic","Blues","Melodic Minor","Ionian","Dorian","Phrygian","Lydian","Mixolydian","Aeolian","Locrian","Whole Tone"};
 
 	protected String root;
 	protected String type;
@@ -104,20 +105,33 @@ public class Scale {
 
 		int octavesToGenerate = (int) Math.ceil((float) (upperBoundMidiNote - rootNoteMidi) / 12);
 
-		int semitonesInPartialOctave = upperBoundMidiNote - (rootNoteMidi + (octavesToGenerate-1)*12);
-		int[] cumulativeIntervals = new int[scaleFormula.length];
-		cumulativeIntervals[0] = scaleFormula[0];
-		for (int i = 1; i < scaleFormula.length; i++) {
-			cumulativeIntervals[i] = cumulativeIntervals[i-1] + scaleFormula[i];
-		}
+		int endOfLastFullOctave = (rootNoteMidi + (octavesToGenerate-1)*12);
+
+		int semitonesInPartialOctave = upperBoundMidiNote - endOfLastFullOctave;
+
+		int accumulator = 0;
 		int nNotesInPartialOctave = 0;
-		for (int i = 0; i < cumulativeIntervals.length; i++) {
-			if(cumulativeIntervals[i] <= semitonesInPartialOctave ){
-				nNotesInPartialOctave = i+1;
+		for (int i = 0; i < scaleFormula.length; i++) {
+			accumulator += scaleFormula[i];
+			if(endOfLastFullOctave + accumulator > upperBoundMidiNote){
+				nNotesInPartialOctave = i;
+				break;
 			}
 		}
+		Log.d("notesInPartialOctave",Integer.toString(nNotesInPartialOctave));
+//		int[] cumulativeIntervals = new int[scaleFormula.length];
+//		cumulativeIntervals[0] = scaleFormula[0];
+//		for (int i = 1; i < scaleFormula.length; i++) {
+//			cumulativeIntervals[i] = cumulativeIntervals[i-1] + scaleFormula[i];
+//		}
+//
+//		for (int i = 0; i < cumulativeIntervals.length; i++) {
+//			if(cumulativeIntervals[i] <= semitonesInPartialOctave ){
+//				nNotesInPartialOctave = i+1;
+//			}
+//		}
 
-		int tmpNotesSize = (octavesToGenerate-1)*12 + nNotesInPartialOctave;
+		int tmpNotesSize = (octavesToGenerate-1)*scaleFormula.length + nNotesInPartialOctave + 1;
 		int[] tmpNotes = new int[tmpNotesSize];
 
 		Log.d("tmpNotes size: ", Integer.toString(tmpNotesSize));

@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class Chord {
 	public static final String[] ALL_ROOT_NOTES = {"A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"};
 	public static final String[] ALL_CHORD_TYPES = {"maj", "m", "maj7", "m7", "5", "7", "9", "sus2", "sus4", "7sus4", "7#9", "add9", "aug", "dim", "dim7"};
+    public static final String[] NOISE_CLASS_ROOT_AND_TYPE = {"X","X"};
 	//obviously not all possible chord types, just all the ones we have in the app
 
     private final String root;
@@ -101,6 +102,9 @@ public class Chord {
                 template = new int[] {1,3,5,7};
                 modification = new int[] {0,-1,-1,-2};
                 break;
+            case "X" :
+                template = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
+                modification = new int[] {0,0,0,0,0,0,0,0,0,0,0,0};
             default:
                 //This shouldn't happen
                 template = new int[] {0,0,0};
@@ -116,6 +120,9 @@ public class Chord {
     }
 
     public int[] getNotes(){
+        if(type.equals("X")){
+            return new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
+        }
         int rootNumber = MusicUtils.noteNameToSemitoneNumber(root);
         int[] formula = getChordFormula();
         int[] notes = new int[formula.length];
@@ -127,6 +134,9 @@ public class Chord {
     }
 
     public String[] getNoteNames(){
+        if(type.equals("X")){
+            return new String[] {""};
+        }
         int[] notes = getNotes();
         String[] noteNames = new String[notes.length];
         for (int i = 0; i < noteNames.length; i++) {
@@ -136,10 +146,16 @@ public class Chord {
     }
 
     public String toString(){
+        if(type.equals("X")){
+            return "noise";
+        }
         return root + type;
     }
 
     public int getBaseFret(){
+        if(type.equals("X")){
+            return -1;
+        }
         return baseFret;
     }
 
@@ -148,8 +164,18 @@ public class Chord {
     }
 
     private void calculateFingerPositions(){
-        HashMap<String,FingerPositions> chordFingerings = MusicUtils.parseChordDb();
+        //Gotta find a better way to do this
         fingerPositions = new ArrayList<FretboardPosition>();
+        if(type.equals("X")){
+            fingerPositions.add(new FretboardPosition(1,-1));
+            fingerPositions.add(new FretboardPosition(2,-1));
+            fingerPositions.add(new FretboardPosition(3,-1));
+            fingerPositions.add(new FretboardPosition(4,-1));
+            fingerPositions.add(new FretboardPosition(5,-1));
+            fingerPositions.add(new FretboardPosition(6,-1));
+            return;
+        }
+        HashMap<String,FingerPositions> chordFingerings = MusicUtils.parseChordDb();
         FingerPositions fp = chordFingerings.get(root+type);
         baseFret = fp.baseFret;
         int tmpFret, tmpString;

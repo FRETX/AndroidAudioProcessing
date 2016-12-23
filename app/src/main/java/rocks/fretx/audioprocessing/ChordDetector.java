@@ -1,5 +1,7 @@
 package rocks.fretx.audioprocessing;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,12 +13,16 @@ import java.util.List;
 public class ChordDetector extends AudioAnalyzer {
 
     private double[] tempBuffer;
-    private List<Chord> targetChords;
+    private ArrayList<Chord> targetChords;
     protected Chord detectedChord;
 
     protected double[] magnitudeSpectrum;
 
-    public ChordDetector(final int samplingFrequency, final int frameLength, final int frameShift, final List<Chord> targetChords) {
+//	private double distanceThreshold = 0.7;
+
+	private static double NOISE_CLASS_BITMASK_MAGNITUDE = 1;
+//	private static double MAXIMUM_POSSIBLE_NOTES = 6;
+    public ChordDetector(final int samplingFrequency, final int frameLength, final int frameShift, final ArrayList<Chord> targetChords) {
 	    super();
         this.samplingFrequency = samplingFrequency;
         this.frameLength = frameLength;
@@ -50,20 +56,32 @@ public class ChordDetector extends AudioAnalyzer {
 		magnitudeSpectrum = getMagnitudeSpectrum(buf);
 		//Take the sqrt as part of the signal processing algorithm
 		//TODO: verify if disabling this is better
-		for (int i = 0; i < magnitudeSpectrum.length; i++) {
-			magnitudeSpectrum[i] = Math.sqrt(magnitudeSpectrum[i]);
-		}
+//		for (int i = 0; i < magnitudeSpectrum.length; i++) {
+//			magnitudeSpectrum[i] = Math.sqrt(magnitudeSpectrum[i]);
+//		}
 //		readLock = false;
 
 		double A1 = 55; //reference note A1 in Hz
+		double E1 = 82.4;
+		double C3 = 130.81;
 		int frequencyIndex;
 		double[] chromagram = new double[12];
 		Arrays.fill(chromagram, 0);
+		int searchRange = 2;
+//		int searchRangeBase = 2;
+//		int searchRange = searchRangeBase;
 		for (int interval = 0; interval < 12; interval++) {
+//			interval = (i+7)%12;
+//			interval = i;
 			for (int phi = 1; phi <= 5; phi++) {
 				for (int harmonic = 1; harmonic <= 2; harmonic++) {
+//					searchRange = (int) Math.ceil(( (double)(searchRangeBase * phi * harmonic) / 3));
 					frequencyIndex = (int) Math.round(MusicUtils.frequencyFromInterval(A1, interval) * (double) phi * (double) harmonic / ((double) samplingFrequency / (double) frameLength));
 					chromagram[interval] += magnitudeSpectrum[frequencyIndex];
+//					chromagram[interval] += magnitudeSpectrum[frequencyIndex] / harmonic;
+//					chromagram[(interval+7)%12] += magnitudeSpectrum[frequencyIndex] / harmonic;
+//					chromagram[interval] += findMaxValue(magnitudeSpectrum,frequencyIndex-searchRange,frequencyIndex+searchRange) / harmonic;
+//					chromagram[(interval+3)%12] += findMaxValue(magnitudeSpectrum,frequencyIndex-searchRange,frequencyIndex+searchRange) / harmonic;
 				}
 			}
 		}
@@ -74,7 +92,7 @@ public class ChordDetector extends AudioAnalyzer {
 		return chromagram;
 	}
 
-	private Chord detectChord(List<Chord> targetChords, double[] chromagram) {
+	private Chord detectChord(ArrayList<Chord> targetChords, double[] chromagram) {
 		//Take the square of chromagram so the peak differences are more pronounced. see paper.
 		for (int i = 0; i < chromagram.length; i++) {
 			chromagram[i] *= chromagram[i];
@@ -86,28 +104,66 @@ public class ChordDetector extends AudioAnalyzer {
 			deltas[i] = calculateDistanceToChord(chromagram, targetChords.get(i));
 		}
 
-		int chordIndex = findMinIndex(deltas);
+//		int chordIndex = findMinIndex(deltas);
+//		double minDistance = deltas[chordIndex];
+//		if(minDistance > distanceThreshold){
+//			return new Chord("X", "X");
+//		}
+		int chordIndex = findMaxIndex(deltas);
+
+//		double DISTANCE_THRESHOLD = 0.8;
+//		if(deltas[chordIndex] < DISTANCE_THRESHOLD){
+//			return new Chord("X", "X");
+//		}
 
 		if (chordIndex > -1 && chordIndex < targetChords.size()) {
 			return targetChords.get(chordIndex);
 		} else {
-			return new Chord(null, null);
+			return new Chord("X", "X");
 		}
 	}
 
-	public static double calculateDistanceToChord(double[] chromagram, Chord chord) {
+
+
+	public static double calculateDistanceToChord(double[] cgram, Chord chord) {
+		double[] chromagram = cgram.clone();
 		double[] bitMask = new double[12];
-		Arrays.fill(bitMask, 0);
 		int[] notes = chord.getNotes();
-		for (int j = 0; j < notes.length; j++) {
-			bitMask[notes[j] - 1] = 1;
+		Arrays.fill(bitMask, 0);
+//		Arrays.fill(bitMask, 1);
+		if(chord.toString().equals("noise")){
+			for (int j = 0; j < bitMask.length; j++) {
+				bitMask[j] = NOISE_CLASS_BITMASK_MAGNITUDE;
+//				bitMask[j] = 0.5;
+			}
+		} else {
+
+			for (int j = 0; j < notes.length; j++) {
+				bitMask[notes[j] - 1] = 1;
+//				bitMask[notes[j] - 1] = 0;
+			}
 		}
+
 		double distance = 0;
 		for (int j = 0; j < chromagram.length; j++) {
 			distance += chromagram[j] * bitMask[j];
+//			distance += Math.abs(bitMask[j] - chromagram[j]);
 		}
-		distance /= notes.length;
-		distance = Math.sqrt(1 - distance);
+
+		distance /= (double) notes.length;
+		//Noise class doesn't really work effectively but a future review might solve that
+
+		//Possible other metrics
+//		distance /= (double) (12-notes.length); //yes, noise distance will return Inf, essentially disabling it for now
+//		distance = Math.sqrt(1 - distance);
+//		distance = Math.sqrt(distance);
+//		distance = Math.pow(distance,1/12);
+//		distance = 1 - distance;
+
+
+
+
+		Log.d("chordDistance", "Chord: " + chord.toString() + " distance: " + Double.toString(distance));
 		return distance;
 	}
 

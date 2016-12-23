@@ -155,7 +155,7 @@ abstract public class AudioAnalyzer {
     //Utility methods
     public static double findMaxValue(double[] arr, int beginIndex, int endIndex) {
         //TODO: array safety
-        double maxVal = -Double.MAX_VALUE;
+        double maxVal = -1* Double.MAX_VALUE;
         for (int i = beginIndex; i <= endIndex; i++) {
             if (arr[i] > maxVal) maxVal = arr[i];
         }
@@ -174,4 +174,17 @@ abstract public class AudioAnalyzer {
         }
         return minIndex;
     }
+
+	public static int findMaxIndex(double[] arr) {
+		double maxVal = -1*Double.MAX_VALUE;
+		int maxIndex = -1;
+
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] > maxVal) {
+				maxVal = arr[i];
+				maxIndex = i;
+			}
+		}
+		return maxIndex;
+	}
 }

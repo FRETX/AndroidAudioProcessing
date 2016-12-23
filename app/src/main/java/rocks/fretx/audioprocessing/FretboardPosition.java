@@ -55,7 +55,7 @@ public class FretboardPosition {
 		return "FretboardPosition - String: " + Integer.toString(string) + " Fret: " + Integer.toString(fret);
 	}
     public byte getByteCode() {
-        return Byte.valueOf(Integer.toString(this.fret + this.string*10));
+	    return Byte.valueOf(Integer.toString(this.string + this.fret*10));
     }
 
 }

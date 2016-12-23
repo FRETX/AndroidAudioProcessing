@@ -91,8 +91,13 @@ public class AudioProcessing {
 	}
 
 	public void setTargetChords(ArrayList<Chord> chords){
-		targetChords = chords;
-		chordDetector.setTargetChords(chords);
+		targetChords.clear();
+		for (int i = 0; i < chords.size(); i++) {
+			targetChords.add(chords.get(i));
+		}
+		targetChords.add(new Chord("X","X"));
+		Log.d("setting target chords: ", targetChords.toString());
+		chordDetector.setTargetChords(targetChords);
 	}
 
 	public ArrayList<Chord> getTargetChords(){
