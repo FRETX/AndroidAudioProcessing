@@ -163,7 +163,7 @@ public class ChordDetector extends AudioAnalyzer {
 
 
 
-		Log.d("chordDistance", "Chord: " + chord.toString() + " distance: " + Double.toString(distance));
+//		Log.d("chordDistance", "Chord: " + chord.toString() + " distance: " + Double.toString(distance));
 		return distance;
 	}
 
