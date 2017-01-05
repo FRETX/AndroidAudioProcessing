@@ -11,7 +11,7 @@ import java.util.Arrays;
  */
 
 public class Scale {
-	public static final String[] ALL_ROOT_NOTES = {"A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"};
+	public static final String[] ALL_ROOT_NOTES = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
 //	public static final String[] ALL_SCALE_TYPES = {"Major","Minor","Major Pentatonic","Minor Pentatonic","Blues","Harmonic Minor","Melodic Minor","Ionian","Dorian","Phrygian","Lydian","Mixolydian","Aeolian","Locrian","Whole Tone"};
 	public static final String[] ALL_SCALE_TYPES = {"Major","Minor","Major Pentatonic","Minor Pentatonic","Blues","Melodic Minor","Ionian","Dorian","Phrygian","Lydian","Mixolydian","Aeolian","Locrian","Whole Tone"};
 
