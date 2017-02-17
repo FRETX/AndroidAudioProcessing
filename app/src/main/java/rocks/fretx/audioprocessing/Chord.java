@@ -24,6 +24,10 @@ public class Chord {
     public Chord(String root, String type) {
         //TODO: input handling
         this.root = root;
+	    type = type.toLowerCase();
+        if (type.equals("min")) {
+            type = "m";
+        }
         this.type = type;
         calculateFingerPositions();
     }
@@ -40,6 +44,8 @@ public class Chord {
         //in MATLAB: semitoneLookup = cumsum([1 majorIntervals]);
         int[] semitoneLookup = {1,3,5,6,8,10,12,13,15,17,18,20,22,24,25};
         int[] template,modification;
+
+
 
         switch (type){
             case "maj" :
@@ -173,19 +179,21 @@ public class Chord {
             fingerPositions.add(new FretboardPosition(4,-1));
             fingerPositions.add(new FretboardPosition(5,-1));
             fingerPositions.add(new FretboardPosition(6,-1));
+	        baseFret = 0;
             return;
         }
         HashMap<String,FingerPositions> chordFingerings = MusicUtils.parseChordDb();
         FingerPositions fp = chordFingerings.get(root+type);
-        baseFret = fp.baseFret;
-        int tmpFret, tmpString;
+	    if(fp != null){
+		    baseFret = fp.baseFret;
+		    fingerPositions.add(new FretboardPosition(1, fp.string1));
+		    fingerPositions.add(new FretboardPosition(2, fp.string2));
+		    fingerPositions.add(new FretboardPosition(3, fp.string3));
+		    fingerPositions.add(new FretboardPosition(4, fp.string4));
+		    fingerPositions.add(new FretboardPosition(5, fp.string5));
+		    fingerPositions.add(new FretboardPosition(6, fp.string6));
+	    }
 
-        fingerPositions.add(new FretboardPosition(1,fp.string1));
-        fingerPositions.add(new FretboardPosition(2,fp.string2));
-        fingerPositions.add(new FretboardPosition(3,fp.string3));
-        fingerPositions.add(new FretboardPosition(4,fp.string4));
-        fingerPositions.add(new FretboardPosition(5,fp.string5));
-        fingerPositions.add(new FretboardPosition(6,fp.string6));
     }
 
 
