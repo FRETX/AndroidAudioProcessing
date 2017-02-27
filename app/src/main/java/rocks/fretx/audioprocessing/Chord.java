@@ -1,6 +1,8 @@
 package rocks.fretx.audioprocessing;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -108,16 +110,18 @@ public class Chord {
                 template = new int[] {1,3,5,7};
                 modification = new int[] {0,-1,-1,-2};
                 break;
-            case "X" :
+            case "x" :
                 template = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
                 modification = new int[] {0,0,0,0,0,0,0,0,0,0,0,0};
             default:
                 //This shouldn't happen
-                template = new int[] {0,0,0};
-                modification = new int[] {0,0,0};
+                template = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+                modification = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                Log.e("switch default",type + root);
         }
 
         int[] formula = new int[template.length];
+
 
         for (int i = 0; i < formula.length; i++) {
             formula[i] = semitoneLookup[template[i]-1] + modification[i];
