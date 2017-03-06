@@ -18,6 +18,7 @@ public class AudioInputHandler implements Runnable {
 
     public boolean isPaused = false;
     public boolean isFinished = false;
+    private boolean bufferAvailable = false;
     private Object pauseLock = new Object();
 
     private final String TAG = "AudioInputHandler";
@@ -81,9 +82,10 @@ public class AudioInputHandler implements Runnable {
         while(!isFinished){
             int samplesRead = audioInputStream.read(audioBufferTemp,0,audioBufferSize);
             if(samplesRead != audioBufferSize){
-//                Log.e(TAG,"Could not read audio data");
-                Log.d(TAG, "Could not read audio data");
+                Log.v(TAG, "Could not read audio data");
+                bufferAvailable = false;
             } else {
+                bufferAvailable = true;
                 audioBuffer = audioBufferTemp.clone();
                 AudioData audioData = new AudioData(audioBuffer,samplingFrequency);
 //                Log.d("pre-norm power", Double.toString(audioData.getSignalPower()));
@@ -102,14 +104,18 @@ public class AudioInputHandler implements Runnable {
 		return volume;
 	}
 
+    public boolean isBufferAvailable(){ return bufferAvailable; };
+
     public void onDestroy(){
         isFinished = true;
+        bufferAvailable = false;
         releaseInputStream();
     }
 
     public void releaseInputStream(){
         audioInputStream.stop();
         audioInputStream.release();
+        bufferAvailable = false;
         Log.d(TAG,"Audio recording stopped and stream released");
     }
 
