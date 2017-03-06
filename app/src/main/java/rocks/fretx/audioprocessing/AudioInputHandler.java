@@ -81,7 +81,8 @@ public class AudioInputHandler implements Runnable {
         while(!isFinished){
             int samplesRead = audioInputStream.read(audioBufferTemp,0,audioBufferSize);
             if(samplesRead != audioBufferSize){
-                Log.e(TAG,"Could not read audio data");
+//                Log.e(TAG,"Could not read audio data");
+                Log.d(TAG, "Could not read audio data");
             } else {
                 audioBuffer = audioBufferTemp.clone();
                 AudioData audioData = new AudioData(audioBuffer,samplingFrequency);
