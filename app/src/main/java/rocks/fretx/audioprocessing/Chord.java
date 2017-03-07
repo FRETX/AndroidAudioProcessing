@@ -3,6 +3,7 @@ package rocks.fretx.audioprocessing;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
 
 //TODO: proper object comparison, i.e. (chord1 == chord2) should work
 
-public class Chord {
+public class Chord implements Serializable {
 	public static final String[] ALL_ROOT_NOTES = {"A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#"};
 	public static final String[] ALL_CHORD_TYPES = {"maj", "m", "maj7", "m7", "5", "7", "9", "sus2", "sus4", "7sus4", "7#9", "add9", "aug", "dim", "dim7"};
     public static final String[] NOISE_CLASS_ROOT_AND_TYPE = {"X","X"};

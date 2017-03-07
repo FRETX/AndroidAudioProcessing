@@ -2,11 +2,13 @@ package rocks.fretx.audioprocessing;
 
 import android.util.Log;
 
+import java.io.Serializable;
+
 /**
  * Created by Onur Babacan on 10/3/16.
  */
 
-public class FretboardPosition {
+public class FretboardPosition implements Serializable {
     protected int string;
     protected int fret;
 

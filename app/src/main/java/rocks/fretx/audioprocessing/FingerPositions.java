@@ -1,10 +1,12 @@
 package rocks.fretx.audioprocessing;
 
+import java.io.Serializable;
+
 /**
  * Created by onurb_000 on 02/12/16.
  */
 
-public class FingerPositions {
+public class FingerPositions implements Serializable {
 	public String name;
 	public int baseFret;
 	public int string6;

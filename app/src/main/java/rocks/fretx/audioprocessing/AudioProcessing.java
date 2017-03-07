@@ -160,7 +160,11 @@ public class AudioProcessing {
 		}
 	}
 
-
+	public boolean isBufferAvailable(){
+		if(handler.isBufferAvailable()){
+			return true;
+		} else return false;
+	}
 
 	public void enablePitchDetector() {
 		pitchDetector.enable();
