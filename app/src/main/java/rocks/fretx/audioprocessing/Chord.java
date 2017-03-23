@@ -174,6 +174,22 @@ public class Chord implements Serializable {
         return fingerPositions;
     }
 
+    public int[] getMidiNotes(){
+        int playedNotes = 0;
+        for (FretboardPosition fp : fingerPositions ) {
+            if(fp.fret > -1) playedNotes++;
+        }
+        int[] midiNotes = new int[playedNotes];
+        int midiNotesIndex = 0;
+        for (FretboardPosition fp : fingerPositions) {
+            if (fp.fret > -1){
+                midiNotes[midiNotesIndex] = fp.toMidi();
+                midiNotesIndex++;
+            }
+        }
+        return midiNotes;
+    }
+
     private void calculateFingerPositions(){
         //Gotta find a better way to do this
         fingerPositions = new ArrayList<FretboardPosition>();

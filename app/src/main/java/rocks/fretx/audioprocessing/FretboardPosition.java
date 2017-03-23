@@ -60,4 +60,10 @@ public class FretboardPosition implements Serializable {
 	    return Byte.valueOf(Integer.toString(this.string + this.fret*10));
     }
 
+	public int toMidi(){
+		int midiNote = 40 + (string -1 ) * 5 + fret;
+		if(string >= 5) midiNote -= 1;
+		return midiNote;
+	}
+
 }
