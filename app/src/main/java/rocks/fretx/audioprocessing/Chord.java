@@ -131,7 +131,7 @@ public class Chord implements Serializable {
     }
 
     public int[] getNotes(){
-        if(type.equals("X")){
+        if(type.equals("X") || type.equals("x")){
             return new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
         }
         int rootNumber = MusicUtils.noteNameToSemitoneNumber(root);
@@ -145,7 +145,7 @@ public class Chord implements Serializable {
     }
 
     public String[] getNoteNames(){
-        if(type.equals("X")){
+        if(type.equals("X") || type.equals("x")){
             return new String[] {""};
         }
         int[] notes = getNotes();
@@ -157,14 +157,14 @@ public class Chord implements Serializable {
     }
 
     public String toString(){
-        if(type.equals("X")){
+        if(type.equals("X") || type.equals("x")){
             return "noise";
         }
         return root + type;
     }
 
     public int getBaseFret(){
-        if(type.equals("X")){
+        if(type.equals("X") || type.equals("x")){
             return -1;
         }
         return baseFret;
@@ -193,7 +193,7 @@ public class Chord implements Serializable {
     private void calculateFingerPositions(){
         //Gotta find a better way to do this
         fingerPositions = new ArrayList<FretboardPosition>();
-        if(type.equals("X")){
+        if(type.equals("X") || type.equals("x")){
             fingerPositions.add(new FretboardPosition(1,-1));
             fingerPositions.add(new FretboardPosition(2,-1));
             fingerPositions.add(new FretboardPosition(3,-1));

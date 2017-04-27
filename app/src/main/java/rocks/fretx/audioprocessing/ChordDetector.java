@@ -15,6 +15,7 @@ public class ChordDetector extends AudioAnalyzer {
     private double[] tempBuffer;
     private ArrayList<Chord> targetChords;
     protected Chord detectedChord;
+	private double chordSimilarity = -1;
 
     protected double[] magnitudeSpectrum;
 
@@ -33,9 +34,7 @@ public class ChordDetector extends AudioAnalyzer {
         this.targetChords = targetChords;
     }
 
-	protected void setTargetChords(ArrayList<Chord> chords){
-		targetChords = chords;
-	}
+	protected void setTargetChords(ArrayList<Chord> chords){ targetChords = chords;	}
 
 	private double[] getChromagram(double[] audioBuffer) {
 		//Make sure the buffer length is even
@@ -110,6 +109,7 @@ public class ChordDetector extends AudioAnalyzer {
 //			return new Chord("X", "X");
 //		}
 		int chordIndex = findMaxIndex(deltas);
+		chordSimilarity = deltas[chordIndex];
 
 //		double DISTANCE_THRESHOLD = 0.8;
 //		if(deltas[chordIndex] < DISTANCE_THRESHOLD){
@@ -123,6 +123,9 @@ public class ChordDetector extends AudioAnalyzer {
 		}
 	}
 
+	public double getChordSimilarity(){
+		return chordSimilarity;
+	}
 
 
 	public static double calculateDistanceToChord(double[] cgram, Chord chord) {

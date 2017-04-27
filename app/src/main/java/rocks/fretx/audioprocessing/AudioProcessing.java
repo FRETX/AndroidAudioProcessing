@@ -29,6 +29,8 @@ public class AudioProcessing {
 		return chordDetector.detectedChord;
 	}
 
+	public double getChordSimilarity(){ return chordDetector.getChordSimilarity(); }
+
 	public int getMidiNote(){
 		return noteDetector.noteMidi;
 	}
