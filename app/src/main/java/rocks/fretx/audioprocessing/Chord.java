@@ -216,7 +216,12 @@ public class Chord implements Serializable {
 	    }
 
     }
-
+    
+    public boolean equals(Object obj) {
+        if(obj instanceof Chord)
+            return this.toString().equals(obj.toString());
+        else return false;
+    }
 
 	// chord data - currently explicit representation for 6 string guitar, standard tuning only, and
 // each chord is an array of alternate positions
