@@ -109,7 +109,8 @@ public class ChordDetector extends AudioAnalyzer {
 //			return new Chord("X", "X");
 //		}
 		int chordIndex = findMaxIndex(deltas);
-		chordSimilarity = deltas[chordIndex];
+		if(chordIndex >= 0 && chordIndex < deltas.length) chordSimilarity = deltas[chordIndex];
+		else chordSimilarity = 0;
 
 //		double DISTANCE_THRESHOLD = 0.8;
 //		if(deltas[chordIndex] < DISTANCE_THRESHOLD){

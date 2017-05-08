@@ -145,7 +145,7 @@ public class PitchDetector extends AudioAnalyzer {
         int i = 0;
         boolean tauFound = false;
 
-        while(!tauFound && i+1 < yinBuffer.length){
+        while(!tauFound && (i+1 < yinBuffer.length - 1)){
             if(yinBuffer[i] < threshold){
                 if(i+1 == yinBuffer.length) break;
                 while(yinBuffer[i+1] < yinBuffer[i]){
