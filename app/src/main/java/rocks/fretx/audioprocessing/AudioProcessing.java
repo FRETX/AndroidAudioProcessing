@@ -22,24 +22,34 @@ public class AudioProcessing {
 
 
 	public float getPitch(){
+		if(pitchDetector == null) return -1;
 		return pitchDetector.medianPitch;
 	}
 
 	public Chord getChord(){
+		if(chordDetector == null) return new Chord("X","X");
 		return chordDetector.detectedChord;
 	}
 
-	public double getChordSimilarity(){ return chordDetector.getChordSimilarity(); }
+	public double getChordSimilarity(){
+		if(chordDetector == null) return -1;
+		return chordDetector.getChordSimilarity();
+	}
 
 	public int getMidiNote(){
+		if(noteDetector == null) return -1;
 		return noteDetector.noteMidi;
 	}
 
 	public String getNoteName(){
+		if(noteDetector == null) return null;
 		return noteDetector.noteName;
 	}
 
-	public double getVolume(){ return handler.getVolume();}
+	public double getVolume(){
+		if(handler == null) return -1;
+		return handler.getVolume();
+	}
 
 	public void initialize(int targetFs, double bufferSizeInSeconds){
 		//TODO: take fs as input and give warning if requested fs is unavailable
