@@ -79,7 +79,7 @@ public class AudioProcessing {
 		float frameOverlap = 0.5f;
 		float yinThreshold = 0.10f;
 		pitchDetector = new PitchDetector(targetFs, frameLength, frameLength/2, yinThreshold);
-		//Patch pitch detector to the note detector
+
 		noteDetector = new NoteDetector();
 
 		//TODO: make target chords dynamic
@@ -97,6 +97,7 @@ public class AudioProcessing {
 		//Patch it to audio handler
 		handler.addAudioAnalyzer(pitchDetector);
 		handler.addAudioAnalyzer(chordDetector);
+		//Patch pitch detector to the note detector
 		pitchDetector.addParameterAnalyzer(noteDetector);
 		initialized = true;
 
