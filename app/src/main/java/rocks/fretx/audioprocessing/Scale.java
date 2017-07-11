@@ -95,11 +95,36 @@ public class Scale {
 
 		int[] rootNotesMidi = MusicUtils.noteNameToMidiNotes(root);
 
+		int lowestRootNoteIndex = 0;
 		for (int i = rootNotesMidi.length-1; i >= 0 ; i--) {
 			if(rootNotesMidi[i] <= upperBoundMidiNote && rootNotesMidi[i] >= lowerBoundMidiNote){
 				rootNoteMidi = rootNotesMidi[i];
+				lowestRootNoteIndex = i;
 			}
 		}
+
+		int lowerPartialOctaveRootNote = rootNoteMidi;
+		if(lowestRootNoteIndex > 0) {
+			lowerPartialOctaveRootNote = rootNotesMidi[lowestRootNoteIndex - 1];
+		}
+
+		ArrayList<Integer> lowerPartialNotes = new ArrayList<>();
+
+		int accumulator = 0;
+		int nNotesInPartialOctave = 0;
+		for (int i = 0; i < scaleFormula.length; i++) {
+			accumulator += scaleFormula[i];
+			if(lowerPartialOctaveRootNote + accumulator < lowerBoundMidiNote){
+				continue;
+			}
+			lowerPartialNotes.add(lowerPartialOctaveRootNote+accumulator);
+			if(lowerPartialOctaveRootNote + accumulator > rootNoteMidi){
+				break;
+			}
+		}
+
+
+
 
 		Log.d("scale lowest root note:" , Integer.toString(rootNoteMidi));
 
@@ -109,8 +134,8 @@ public class Scale {
 
 		int semitonesInPartialOctave = upperBoundMidiNote - endOfLastFullOctave;
 
-		int accumulator = 0;
-		int nNotesInPartialOctave = 0;
+		accumulator = 0;
+		nNotesInPartialOctave = 0;
 		for (int i = 0; i < scaleFormula.length; i++) {
 			accumulator += scaleFormula[i];
 			if(endOfLastFullOctave + accumulator > upperBoundMidiNote){
@@ -150,7 +175,21 @@ public class Scale {
 
 		Log.d("tmpNotes: ", Arrays.toString(tmpNotes));
 
-		notes = tmpNotes;
+
+		int[] fullNotes = new int[tmpNotes.length + lowerPartialNotes.size()];
+
+		int fullNotesIndex = 0;
+		for (int j = 0; j < lowerPartialNotes.size(); j++) {
+			fullNotes[fullNotesIndex] = lowerPartialNotes.get(j);
+			fullNotesIndex++;
+		}
+
+		for (int j = 0; j < tmpNotes.length; j++) {
+			fullNotes[fullNotesIndex] = tmpNotes[j];
+			fullNotesIndex++;
+		}
+
+		notes = fullNotes;
 
 		Log.d("notes length: ",Integer.toString(notes.length));
 
