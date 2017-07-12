@@ -131,37 +131,28 @@ public class PitchDetector extends AudioAnalyzer {
     }
 
     private void cumulativeMeanNormalizedDifference() {
-        int tau;
         yinBuffer[0] = 1;
         float runningSum = 0;
-        for (tau = 1; tau < yinBuffer.length; tau++) {
+        for (int tau = 1; tau < yinBuffer.length; tau++) {
             runningSum += yinBuffer[tau];
             yinBuffer[tau] = yinBuffer[tau] / runningSum * tau;
         }
     }
 
     private int absoluteThreshold() {
-        int tau = 0;
-        int i = 0;
-        boolean tauFound = false;
-
-        while(!tauFound && (i+1 < yinBuffer.length - 1)){
-            if(yinBuffer[i] < threshold){
-                if(i+1 == yinBuffer.length - 1) break;
-                while(yinBuffer[i+1] < yinBuffer[i]){
-                    tau = i++;
-                }
-                tauFound = true;
-                result.setProbability(1 - yinBuffer[tau]);
-            } else i++;
+        int tau = -1;
+        for (int index = 0; index < yinBuffer.length - 2; ++index) {
+            if(yinBuffer[index] >= threshold)
+                continue;
+            for (; index < yinBuffer.length - 2 && yinBuffer[index] > yinBuffer[index + 1]; ++index) {
+                tau = index;
+            }
+            result.setProbability(1.0F - yinBuffer[tau]);
+            result.setPitched(true);
+            return tau;
         }
-
-        if(!tauFound){
-            tau = -1;
-            result.setProbability(0);
-            result.setPitched(false);
-        } else result.setPitched(true);
-
+        result.setProbability(0.0F);
+        result.setPitched(false);
         return tau;
     }
 
