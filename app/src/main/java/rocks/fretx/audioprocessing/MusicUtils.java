@@ -153,9 +153,10 @@ public class MusicUtils {
 	}
 
 	public static String midiNoteToName(int midiNote) {
-		String[] noteString = new String[]{"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
-		int octave = (midiNote / 12) - 1;
-		int noteIndex = (midiNote % 12);
+		final String[] noteString = new String[]{"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
+		midiNote = Math.abs(midiNote);
+		final int octave = (midiNote / 12);
+		final int noteIndex = (midiNote % 12);
 		return (noteString[noteIndex] + Integer.toString(octave));
 	}
 

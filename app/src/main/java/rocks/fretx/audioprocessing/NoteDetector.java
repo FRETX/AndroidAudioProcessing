@@ -15,7 +15,7 @@ public class NoteDetector extends ParameterAnalyzer {
 	}
 
 	public void internalProcess(double input){
-		if (input > -1) {
+		if (input > 0) {
 			noteMidi = (int) Math.round(MusicUtils.hzToMidiNote(input));
 			error = Math.abs((double) noteMidi - MusicUtils.hzToMidiNote(input));
 			noteName = MusicUtils.midiNoteToName(Math.round((float) noteMidi));
